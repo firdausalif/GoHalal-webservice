@@ -33,7 +33,7 @@ class User extends CI_Model {
 		$username = $data['username'];
 		$password = md5($data['password']);
 		
-		$this->db->select("username, password");	
+		$this->db->select("*");
 		$this->db->where("username", $username);
 		$this->db->where("password", $password);
 		$this->db->from("user");
@@ -41,7 +41,7 @@ class User extends CI_Model {
         $query = $this->db->get();
         
 		if($query->num_rows() > 0){             
-			return "S";                
+			return JWT::encode($query->result_array());
 		}else{        
 			return "E101";  
 		}		

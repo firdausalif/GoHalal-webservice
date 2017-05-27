@@ -28,6 +28,8 @@ class Login extends REST_Controller {
 			}else{
 				$data_result['success'] = 1;
                 $data_result['msg'] = "Login Successfull";
+                $data_result['jwt_token'] = $model_response;
+                $data_result['userdata'] = JWT::decode($model_response, $this->config->item('jwt_key'));
 			}
 		}
 		
