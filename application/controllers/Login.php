@@ -18,6 +18,8 @@ class Login extends REST_Controller {
 		
 		$data['username']	= $this->post('username');
 		$data['password']	= $this->post('password');
+        $data_result['success'] = 0;
+        $data_result['msg'] = "Invalid Username or Password";
 		
 		if (isset($data['username']) && !empty($data['username']) && isset($data['password']) && !empty($data['password'])){
 			$model_response=$this->User->login_user($data);
@@ -28,12 +30,12 @@ class Login extends REST_Controller {
 			}else{
 				$data_result['success'] = 1;
                 $data_result['msg'] = "Login Successfull";
-                $data_result['jwt_token'] = $model_response;
-                $data_result['userdata'] = JWT::decode($model_response, $this->config->item('jwt_key'));
+                $data_result['jwt_token'] = JWT::encode($model_response['auth_key'], $this->config->item('jwt_key'));
+                $data_result['userdata'] = $model_response;
 			}
 		}
 		
-		$this->response($data_result);		
+		$this->response($data_result, parent::HTTP_OK);
     }   
 
 	

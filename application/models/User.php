@@ -39,12 +39,24 @@ class User extends CI_Model {
 		$this->db->from("user");
 		$this->db->limit(1);
         $query = $this->db->get();
-        
-		if($query->num_rows() > 0){             
-			return JWT::encode($query->result_array());
+		if($query->num_rows() > 0){
+            $this->db->where("username", $username);
+		    $this->db->update('user', array('auth_key' => Token::generateToken()));
+
+            $data = $this->getUser($query->result_array()[0]['id']);
+			return $data;
 		}else{        
 			return "E101";  
 		}		
+    }
+
+    public function getUser($id) {
+        $this->db->select("id, username, email, auth_key");
+        $this->db->where("id", $id);
+        $this->db->from("user");
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->result_array()[0];
     }
 		
 }
