@@ -58,6 +58,23 @@ class User extends CI_Model {
         $query = $this->db->get();
         return $query->result_array()[0];
     }
+
+    public function checkToken($token) {
+	    $auth_key = JWT::decode($token, $this->config->item('jwt_key'));
+        if($auth_key != false) {
+            $this->db->select('id, username, email');
+            $this->db->where('auth_key', $auth_key);
+            $this->db->limit(1);
+            $query = $this->db->get('user');
+            if($query->num_rows() > 0) {
+                return $query->result_array()[0];
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 		
 }
 

@@ -18,9 +18,9 @@ class Authentication
     }
 
     public static  function tokenAuth($token) {
-        $decoded = JWT::decode($token, self::$CI->config->item('jwt_key'));
-        if($decoded != false) {
-            return $decoded;
+        $response = self::$CI->User->checkToken($token);
+        if($response != false) {
+            return $response;
         } else {
             return false;
         }

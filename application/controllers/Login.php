@@ -36,7 +36,22 @@ class Login extends REST_Controller {
 		}
 		
 		$this->response($data_result, parent::HTTP_OK);
-    }   
+    }
+
+    /**
+     * Example authentication using JWT
+     */
+    public function auth_post() {
+	    $jwt_token = $this->post('jwt_token');
+
+        $auth = Authentication::tokenAuth($jwt_token);
+	    if($auth) {
+            $this->response(array('success' => 1, 'userdata' => $auth));
+        } else {
+            $this->response(array('success' => 0, 'message' => 'Not Authorized'));
+        }
+
+    }
 
 	
 }
